@@ -11,7 +11,7 @@ const userSchema = mongoose.Schema({
         trim: false,
     },
     deviceId2:{
-        required:true,
+        required:false,
         type: String,
         trim: false,
     },

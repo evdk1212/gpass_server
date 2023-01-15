@@ -21,7 +21,7 @@ authRouter.post("/api/signup", async(req,res)=>{
             name,
             password: hashedPassword,
             deviceId,
-            deviceId2,
+            deviceId2: "nothing",
             
             
         });
