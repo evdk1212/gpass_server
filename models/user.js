@@ -7,7 +7,7 @@ const userSchema = mongoose.Schema({
     },
     deviceId:{
         required:true,
-        type: String,
+        type: Array,
         trim: true,
     },
     password: {
