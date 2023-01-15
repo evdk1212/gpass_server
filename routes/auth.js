@@ -4,12 +4,15 @@ const bcryptjs = require("bcryptjs");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 
+
 // Sign up
 authRouter.post("/api/signup", async(req,res)=>{
     try{
-        const {name,deviceId,password}=req.body;
-        const existingUser = await User.findOne({deviceId});
-        if(existingUser){
+        const {name,deviceId,deviceId2, password}=req.body;
+        
+        const existingUser =  await User.findOne({deviceId});
+        const existingUser2 =  await User.findOne({deviceId2});
+        if(existingUser||existingUser2){
             return res.status(400)
             .json({msg:"User already exists!"});
         }
@@ -18,6 +21,7 @@ authRouter.post("/api/signup", async(req,res)=>{
             name,
             password: hashedPassword,
             deviceId,
+            deviceId2,
             
             
         });
@@ -32,10 +36,11 @@ authRouter.post("/api/signup", async(req,res)=>{
 //Sign In
 authRouter.post("/api/signin", async(req,res)=>{
     try{
-        const {deviceId,password}= req.body;
+        const {deviceId,deviceId2,password}= req.body;
         
         const user = await User.findOne({deviceId});
-        if(!user){
+        const user2 = await User.findOne({deviceId2});
+        if(!user||!user2){
             return res.status(400).json({msg: "User does not exist!"});
         }
         const isMatch = await bcryptjs.compare(password, user.password);

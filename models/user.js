@@ -7,8 +7,13 @@ const userSchema = mongoose.Schema({
     },
     deviceId:{
         required:true,
-        type: Array,
-        trim: true,
+        type: String,
+        trim: false,
+    },
+    deviceId2:{
+        required:true,
+        type: String,
+        trim: false,
     },
     password: {
         required: true,
