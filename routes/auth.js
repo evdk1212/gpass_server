@@ -50,12 +50,13 @@ authRouter.post("/api/signin", async (req, res) => {
   User.findOne({ deviceId: { $in: req.body.deviceId } }, (err, user) => {
     if (err) return res.status(500).send(err);
     if (!user) return res.status(404).send({ message: "User not found" });
-    const isMatch = bcryptjs.compare(req.body.password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ msg: "Incorrect password." });
-    }
-    const token = jwt.sign({ id: user._id }, "passwordKey");
-    res.json({ token, ...user._doc });
+    bcryptjs.compare(req.body.password, user.password , (err, isMatch)=>{
+        if (err) return res.status(500).send(err);
+        if (!isMatch) return res.status(401).send({ message: 'Wrong password' });
+        const token = jwt.sign({ id: user._id }, "passwordKey");
+        res.json({ token, ...user._doc });
+    });
+    
   });
 });
 
