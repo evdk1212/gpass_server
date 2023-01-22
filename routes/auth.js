@@ -4,8 +4,18 @@ const bcryptjs = require("bcryptjs");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 
+const authorizedKeys = ['ATIuxQfvT11lxkF2', '9TxcWF8mLfQ59yRO', 'qk5bl1tcItvGrHER'];
+
+// middleware to check for valid API key
+const checkApiKey = (req, res, next) => {
+    const apiKey = req.headers['api-key'];
+    if (!apiKey || authorizedKeys.indexOf(apiKey) === -1) {
+        return res.status(401).send({error: 'Invalid API key'});
+    }
+    next();
+};
 // Sign up
-authRouter.post("/api/signup", async (req, res) => {
+authRouter.post("/api/signup",checkApiKey, async (req, res) => {
   try {
     const { name, deviceId,uid, deviceDetails, password } = req.body;
 
@@ -29,7 +39,7 @@ authRouter.post("/api/signup", async (req, res) => {
 });
 
 //Sign In
-authRouter.post("/api/signin", async (req, res) => {
+authRouter.post("/api/signin",checkApiKey, async (req, res) => {
 
   User.findOne({ deviceId: { $in: req.body.deviceId } }, (err, user) => {
     if (err) return res.status(500).send(err);
@@ -46,7 +56,7 @@ authRouter.post("/api/signin", async (req, res) => {
 
 //add New deviceId
 
-authRouter.post("/api/adddevice", async (req,res)=>{
+authRouter.post("/api/adddevice",checkApiKey, async (req,res)=>{
     User.updateOne({ deviceId: req.body.deviceId }, { $addToSet: { deviceId: req.body.newDeviceId} }, function(err, res) {
         if (err) throw err;
         
