@@ -10,6 +10,11 @@ const userSchema = mongoose.Schema({
         type: [String],
         unique: true,
     },
+    uid:{
+        required:true,
+        type: String,
+        unique: true,
+    },
     deviceDetails:{
         required:true,
         type: String,
