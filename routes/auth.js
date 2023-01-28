@@ -64,4 +64,13 @@ authRouter.post("/api/adddevice",checkApiKey, async (req,res)=>{
     res.json({msg: "New Device Added"});
 });
 
+authRouter.post("/api/removeOneDevice", checkApiKey, async(req,res)=>{
+  User.updateOne({}, {$pull: {deviceId: req.body.deviceId}}, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+   
+  });
+  res.json({msg: "Device Removed"});
+});
+
 module.exports = authRouter;
